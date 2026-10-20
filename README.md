@@ -307,6 +307,6 @@ Released under the [MIT License](LICENSE). See `LICENSE` for details.
 **Infinity Blaze** · Team ID `VTU-QFF-HC-0185` · Tier `Online`
 · Built with ⚛️ Qiskit for the VTU-QFF Hackathon
 
-[⬆ Back to Top](#Infinity Blaze)
+[⬆ Back to Top](#infinity-blaze)
 
 </div>
