@@ -117,38 +117,41 @@ flowchart LR
 Energy inputs → Preprocessing → Binary optimization model → QAOA circuit simulation → Measurement and decoding → Feasibility and cost scoring → Classical comparison → Dashboard visualization.
 
 1. **Input** — The current prototype uses a synthetic dataset with four time slots.
+   
 | Feature |	Format	| Example |
-| :-- | :-- | :-- |
-| Time slot	| String |	12:00 |
-| Base electricity | demand |	kWh	2.5 |
-| Solar generation | 	kWh	3.0 |
-| Electricity price |	₹/kWh |	4.0 |
-| Flexible-load decision |	Binary: 0 or 1 |	1
+| :-- | :--- | :--- |
+| Time slot	| String | 12:00 |
+| Base electricity demand | kWh | 2.5 |
+| Solar generation | kWh | 3.0 |
+| Electricity price | ₹/kWh | 4.0 |
+| Flexible-load decision |	Binary: 0 or 1 | 1 |
 
 For a real deployment, these inputs could come from smart meters, solar generation forecasts, and applicable electricity tariffs.
 
 2. **Preprocessing** — • Organize the energy data into time slots.
-• Represent each scheduling decision with a binary variable \(x_i\).
-• Interpret Xi=1 as scheduling one 1-kWh flexible-load block in slot i, and Xi=0 as not scheduling it.
+   
+• Represent each scheduling decision with a binary variable $$\(x_i\)$$.
+
+• Interpret $$\x_i=1\)$$ as scheduling one 1-kWh flexible-load block in slot $$\(i\)$$, and $$\(x_i=0\)$$ as not scheduling it.
+
 • Calculate estimated grid imports using demand minus available solar generation, with a lower bound of zero.
 
-3. **Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
+4. **Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
 
 The objective function is:
-\[
-C(x)=
-\sum_{i=1}^{n}p_i
-\max(d_i+x_i-s_i,0)
-+\lambda\left(\sum_{i=1}^{n}x_i-K\right)^2
-\]
+
+$$
+C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0)
++ \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2
+$$
 
 Where:
-- \(p_i\): electricity price in slot \(i\).
-- \(d_i\): base demand.
-- \(s_i\): solar generation.
-- \(x_i\): binary flexible-load decision.
-- \(K\): required number of scheduled load blocks.
-- \(\lambda\): constraint penalty.
+- $$\(p_i\)$$: electricity price in slot i.
+- $$\(d_i\)$$: base demand.
+- $$\(s_i\)$$: solar generation.
+- $$\(x_i\)$$: binary flexible-load decision.
+- $$\(K\)$$: required number of scheduled load blocks.
+- $$\(\lambda\)$$: constraint penalty.
 The circuit applies a cost-based phase separator followed by mixer rotations. A classical optimizer adjusts the QAOA parameters to seek lower expected cost.
 
 4. **Post-processing** — Measurement and scoring
@@ -157,7 +160,7 @@ The circuit applies a cost-based phase separator followed by mixer rotations. A 
 - Calculate its estimated electricity cost and constraint feasibility.
 - Identify the best feasible candidate observed.
 - Compare it with the exact classical optimum.
-- 
+ 
 Because QAOA is stochastic, it may not find the optimal schedule in every run.
 
 5. **Output** — The Streamlit interface displays:
@@ -166,7 +169,7 @@ Because QAOA is stochastic, it may not find the optimal schedule in every run.
 - Schedule feasibility.
 - QAOA measurement counts and feasible samples.
 - Comparison against the exact classical result.
-- 
+  
 The next development stage is to add battery state-of-charge constraints, real energy data, and a validated emissions model.
 
 ---
