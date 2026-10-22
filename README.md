@@ -85,7 +85,9 @@ the quantum/ML technique you are applying.
 
 **Key idea:** Use a QAOA quantum circuit with a cost-based phase separator and mixer operations to sample candidate energy schedules, then compare the best feasible candidate against an exact classical optimizer.
 
-**Why this works:** 1) Cost-aware scheduling: Electricity prices and solar generation influence the preferred time slots.
+**Why this works:** 
+
+1) Cost-aware scheduling: Electricity prices and solar generation influence the preferred time slots.
 
 2) Constraint handling: A penalty term discourages schedules that select the wrong number of time slots.
 
@@ -114,7 +116,7 @@ flowchart LR
     G --> H[Dashboard visualization]
 ```
 
-Energy inputs → Preprocessing → Binary optimization model → QAOA circuit simulation → Measurement and decoding → Feasibility and cost scoring → Classical comparison → Dashboard visualization.
+ Energy inputs → Preprocessing → Binary optimization model → QAOA circuit simulation → Measurement and decoding → Feasibility and cost scoring → Classical comparison → Dashboard visualization.
 
 1. **Input** — The current prototype uses a synthetic dataset with four time slots.
    
@@ -126,7 +128,7 @@ Energy inputs → Preprocessing → Binary optimization model → QAOA circuit s
 | Electricity price | ₹/kWh | 4.0 |
 | Flexible-load decision |	Binary: 0 or 1 | 1 |
 
-For a real deployment, these inputs could come from smart meters, solar generation forecasts, and applicable electricity tariffs.
+ For a real deployment, these inputs could come from smart meters, solar generation forecasts, and applicable electricity tariffs.
 
 2. **Preprocessing** — • Organize the energy data into time slots.
    
@@ -136,14 +138,17 @@ For a real deployment, these inputs could come from smart meters, solar generati
 
 • Calculate estimated grid imports using demand minus available solar generation, with a lower bound of zero.
 
-4. **Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
+3. **Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
 
-The objective function is:
+ The objective function is:
 
-$$C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0)
-+ \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2$$
+$$
+C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0)
 
-Where:
+\lambda \left(\sum_{i=1}^{n} x_i - K\right)^2
+$$
+
+ Where:
 - $$\(p_i\)$$: electricity price in slot i.
   
 - $$\(d_i\)$$: base demand.
@@ -156,7 +161,7 @@ Where:
   
 - $$\(\lambda\)$$: constraint penalty.
   
-The circuit applies a cost-based phase separator followed by mixer rotations. A classical optimizer adjusts the QAOA parameters to seek lower expected cost.
+ The circuit applies a cost-based phase separator followed by mixer rotations. A classical optimizer adjusts the QAOA parameters to seek lower expected cost.
 
 4. **Post-processing** — Measurement and scoring
    
@@ -170,7 +175,7 @@ The circuit applies a cost-based phase separator followed by mixer rotations. A 
   
 - Compare it with the exact classical optimum.
  
-Because QAOA is stochastic, it may not find the optimal schedule in every run.
+ Because QAOA is stochastic, it may not find the optimal schedule in every run.
 
 5. **Output** — The Streamlit interface displays:
    
@@ -185,7 +190,7 @@ Because QAOA is stochastic, it may not find the optimal schedule in every run.
 - Comparison against the exact classical result.
   
   
-The next development stage is to add battery state-of-charge constraints, real energy data, and a validated emissions model.
+ The next development stage is to add battery state-of-charge constraints, real energy data, and a validated emissions model.
 
 ---
 
