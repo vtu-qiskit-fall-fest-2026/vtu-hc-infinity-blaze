@@ -85,13 +85,13 @@ the quantum/ML technique you are applying.
 
 **Key idea:** Use a QAOA quantum circuit with a cost-based phase separator and mixer operations to sample candidate energy schedules, then compare the best feasible candidate against an exact classical optimizer.
 
-**Why this works:** 1)Cost-aware scheduling: Electricity prices and solar generation influence the preferred time slots.
+**Why this works:** 1) Cost-aware scheduling: Electricity prices and solar generation influence the preferred time slots.
 
-2)Constraint handling: A penalty term discourages schedules that select the wrong number of time slots.
+2) Constraint handling: A penalty term discourages schedules that select the wrong number of time slots.
 
-3)Measurable evaluation: The classical optimizer checks every possible schedule in the four-slot example, providing an exact reference for QAOA.
+3) Measurable evaluation: The classical optimizer checks every possible schedule in the four-slot example, providing an exact reference for QAOA.
 
-4)Accessible visualization: A Streamlit dashboard makes the results easy to inspect and demonstrate.
+4) Accessible visualization: A Streamlit dashboard makes the results easy to inspect and demonstrate.
 
 Scientific note: The current prototype uses synthetic data and a classical simulator of quantum circuits. It does not establish quantum advantage, and its initial implementation schedules flexible loads rather than battery charging and discharging.
 
@@ -132,7 +132,7 @@ For a real deployment, these inputs could come from smart meters, solar generati
    
 • Represent each scheduling decision with a binary variable $$\(x_i\)$$.
 
-• Interpret $$\x_i=1\)$$ as scheduling one 1-kWh flexible-load block in slot $$\(i\)$$, and $$\(x_i=0\)$$ as not scheduling it.
+• Interpret $$\(x_i=1\)$$ as scheduling one 1-kWh flexible-load block in slot $$\(i\)$$, and $$\(x_i=0\)$$ as not scheduling it.
 
 • Calculate estimated grid imports using demand minus available solar generation, with a lower bound of zero.
 
@@ -140,35 +140,50 @@ For a real deployment, these inputs could come from smart meters, solar generati
 
 The objective function is:
 
-$$
-C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0)
-+ \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2
-$$
+$$C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0)
++ \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2$$
 
 Where:
 - $$\(p_i\)$$: electricity price in slot i.
+  
 - $$\(d_i\)$$: base demand.
+  
 - $$\(s_i\)$$: solar generation.
+  
 - $$\(x_i\)$$: binary flexible-load decision.
+  
 - $$\(K\)$$: required number of scheduled load blocks.
+  
 - $$\(\lambda\)$$: constraint penalty.
+  
 The circuit applies a cost-based phase separator followed by mixer rotations. A classical optimizer adjusts the QAOA parameters to seek lower expected cost.
 
 4. **Post-processing** — Measurement and scoring
+   
 - Measure the quantum circuit to obtain bitstrings.
+  
 - Decode each bitstring into a candidate schedule.
+  
 - Calculate its estimated electricity cost and constraint feasibility.
+  
 - Identify the best feasible candidate observed.
+  
 - Compare it with the exact classical optimum.
  
 Because QAOA is stochastic, it may not find the optimal schedule in every run.
 
 5. **Output** — The Streamlit interface displays:
+   
 - Estimated grid electricity cost.
+  
 - Selected time slots for flexible loads.
+  
 - Schedule feasibility.
+  
 - QAOA measurement counts and feasible samples.
+  
 - Comparison against the exact classical result.
+  
   
 The next development stage is to add battery state-of-charge constraints, real energy data, and a validated emissions model.
 
