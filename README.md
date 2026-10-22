@@ -70,7 +70,7 @@ statement from the brief if one applies.
 
 **Why it matters:** Better energy scheduling can reduce electricity costs, improve the utilization of renewable energy, and support lower-carbon energy systems. This project explores whether quantum optimization techniques can help solve energy-scheduling problems as their complexity grows.
 
-**Track / Category:** _Online  · Track 1 / Track 2 · <domain>_
+**Track / Category:** Online  · Track 1 · Quantum Applications for Climate Change and Sustainability
 
 ---
 
@@ -86,8 +86,11 @@ the quantum/ML technique you are applying.
 **Key idea:** Use a QAOA quantum circuit with a cost-based phase separator and mixer operations to sample candidate energy schedules, then compare the best feasible candidate against an exact classical optimizer.
 
 **Why this works:** 1)Cost-aware scheduling: Electricity prices and solar generation influence the preferred time slots.
+
 2)Constraint handling: A penalty term discourages schedules that select the wrong number of time slots.
+
 3)Measurable evaluation: The classical optimizer checks every possible schedule in the four-slot example, providing an exact reference for QAOA.
+
 4)Accessible visualization: A Streamlit dashboard makes the results easy to inspect and demonstrate.
 
 Scientific note: The current prototype uses synthetic data and a classical simulator of quantum circuits. It does not establish quantum advantage, and its initial implementation schedules flexible loads rather than battery charging and discharging.
@@ -102,24 +105,31 @@ Walk through how it works. A simple pipeline diagram in text or Mermaid is ideal
 
 ```mermaid
 flowchart LR
-    A[Input Data] --> B[Preprocessing]
-    B --> C[Quantum Circuit / Model]
-    C --> D[Post-processing]
-    D --> E[Output]
+    A[Energy inputs] --> B[Preprocessing]
+    B --> C[Binary optimization model]
+    C --> D[QAOA circuit simulation]
+    D --> E[Measurement and decoding]
+    E --> F[Feasibility and cost scoring]
+    F --> G[Classical comparison]
+    G --> H[Dashboard visualization]
 ```
 
+Energy inputs → Preprocessing → Binary optimization model → QAOA circuit simulation → Measurement and decoding → Feasibility and cost scoring → Classical comparison → Dashboard visualization.
+
 1. **Input** — The current prototype uses a synthetic dataset with four time slots.
-Feature	Format	Example
-Time slot	String	12:00
-Base electricity demand	kWh	2.5
-Solar generation	kWh	3.0
-Electricity price	₹/kWh	4.0
-Flexible-load decision	Binary: 0 or 1	1
+| Feature |	Format	| Example |
+| :-- | :-- | :-- |
+| Time slot	| String |	12:00 |
+| Base electricity | demand |	kWh	2.5 |
+| Solar generation | 	kWh	3.0 |
+| Electricity price |	₹/kWh |	4.0 |
+| Flexible-load decision |	Binary: 0 or 1 |	1
 
 For a real deployment, these inputs could come from smart meters, solar generation forecasts, and applicable electricity tariffs.
+
 2. **Preprocessing** — • Organize the energy data into time slots.
 • Represent each scheduling decision with a binary variable \(x_i\).
-• Interpret \(x_i=1\) as scheduling one 1-kWh flexible-load block in slot \(i\), and \(x_i=0\) as not scheduling it.
+• Interpret Xi=1 as scheduling one 1-kWh flexible-load block in slot i, and Xi=0 as not scheduling it.
 • Calculate estimated grid imports using demand minus available solar generation, with a lower bound of zero.
 
 3. **Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
