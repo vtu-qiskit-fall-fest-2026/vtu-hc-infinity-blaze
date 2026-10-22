@@ -70,7 +70,7 @@ statement from the brief if one applies.
 
 **Why it matters:** Better energy scheduling can reduce electricity costs, improve the utilization of renewable energy, and support lower-carbon energy systems. This project explores whether quantum optimization techniques can help solve energy-scheduling problems as their complexity grows.
 
-**Track / Category:** Online  · Track 1 · Quantum Applications for Climate Change and Sustainability
+**Track / Category:** Online  · Track  · Quantum Applications for Climate Change and Sustainability
 
 ---
 
@@ -142,11 +142,9 @@ flowchart LR
 
  The objective function is:
 
-$$
-C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0)
-+ \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2
-$$
-
+```math
+C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0) + \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2
+```
 
  Where:
 - $$\(p_i\)$$: electricity price in slot i.
