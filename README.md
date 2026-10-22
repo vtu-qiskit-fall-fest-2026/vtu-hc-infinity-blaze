@@ -118,7 +118,7 @@ flowchart LR
 
  Energy inputs → Preprocessing → Binary optimization model → QAOA circuit simulation → Measurement and decoding → Feasibility and cost scoring → Classical comparison → Dashboard visualization.
 
-1. **Input** — The current prototype uses a synthetic dataset with four time slots.
+**1. Input** — The current prototype uses a synthetic dataset with four time slots.
    
 | Feature |	Format	| Example |
 | :-- | :--- | :--- |
@@ -130,7 +130,7 @@ flowchart LR
 
  For a real deployment, these inputs could come from smart meters, solar generation forecasts, and applicable electricity tariffs.
 
-2. **Preprocessing** —
+**2. Preprocessing** —
    
 • Organize the energy data into time slots.
    
@@ -141,7 +141,7 @@ flowchart LR
 • Calculate estimated grid imports using demand minus available solar generation, with a lower bound of zero.
 
 
-3. **Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
+**3. Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
 
  The objective function is:
 
@@ -165,7 +165,7 @@ C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0) + \lambda \left(\sum_{i=1}^{n
  The circuit applies a cost-based phase separator followed by mixer rotations. A classical optimizer adjusts the QAOA parameters to seek lower expected cost.
 
 
-4. **Post-processing** — Measurement and scoring
+**4. Post-processing** — Measurement and scoring
    
 - Measure the quantum circuit to obtain bitstrings.
   
@@ -180,7 +180,7 @@ C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0) + \lambda \left(\sum_{i=1}^{n
  Because QAOA is stochastic, it may not find the optimal schedule in every run.
 
 
-5. **Output** — 
+**5. Output** — 
 The Streamlit interface displays:
    
 - Estimated grid electricity cost.
