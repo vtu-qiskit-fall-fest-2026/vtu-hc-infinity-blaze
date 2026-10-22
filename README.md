@@ -46,9 +46,9 @@
 
 | # | Name | GitHub Username | Role |
 | :-- | :--- | :--- | :--- |
-| 1 | Purvesh Sudhir Raghatate | _Purvesh-07_ | _Team Lead_ |
-| 2 | Sahil Subhash Jadhao | _sjadhao2207-eng!_ | _Developer_ |
-| 3 | Manish Balgovind Rajak | _manish-2424_ | _Developer_ |
+| 1 | Purvesh Sudhir Raghatate | Purvesh-07 | Team Lead |
+| 2 | Sahil Subhash Jadhao | sjadhao2207-eng! | Developer |
+| 3 | Manish Balgovind Rajak | manish-2424 | Developer |
 
 <!--
 Optional: add a plain list instead of the table above.
@@ -66,11 +66,11 @@ who experiences it, and why does it matter. Link to the official problem
 statement from the brief if one applies.
 -->
 
-**Problem:** _Describe the problem in 2–3 sentences._
+**Problem:** Inefficient renewable energy utilization and electricity scheduling
 
-**Why it matters:** _Explain the impact or opportunity._
+**Why it matters:** Better energy scheduling can reduce electricity costs, improve the utilization of renewable energy, and support lower-carbon energy systems. This project explores whether quantum optimization techniques can help solve energy-scheduling problems as their complexity grows.
 
-**Track / Category:** _Online / Offline · Track 1 / Track 2 · <domain>_
+**Track / Category:** _Online  · Track 1 / Track 2 · <domain>_
 
 ---
 
@@ -81,11 +81,16 @@ Describe your solution. Keep it concrete: the core idea, the user flow, and
 the quantum/ML technique you are applying.
 -->
 
-**Solution:** _In 2–3 sentences, describe what you built._
+**Solution:** QuantumGreen AI is a Streamlit-based energy optimization prototype that schedules flexible electricity demand across different time slots using solar generation data and electricity prices. It compares an exact classical optimization baseline with a quantum-inspired workflow implemented using the Quantum Approximate Optimization Algorithm (QAOA) and a local quantum circuit simulator. The dashboard presents the selected time slots, estimated grid electricity cost, feasibility, and quantum measurement results.
 
-**Key idea:** _The one-line technical summary of your approach._
+**Key idea:** Use a QAOA quantum circuit with a cost-based phase separator and mixer operations to sample candidate energy schedules, then compare the best feasible candidate against an exact classical optimizer.
 
-**Why this works:** _How your approach addresses the problem statement._
+**Why this works:** 1)Cost-aware scheduling: Electricity prices and solar generation influence the preferred time slots.
+2)Constraint handling: A penalty term discourages schedules that select the wrong number of time slots.
+3)Measurable evaluation: The classical optimizer checks every possible schedule in the four-slot example, providing an exact reference for QAOA.
+4)Accessible visualization: A Streamlit dashboard makes the results easy to inspect and demonstrate.
+
+Scientific note: The current prototype uses synthetic data and a classical simulator of quantum circuits. It does not establish quantum advantage, and its initial implementation schedules flexible loads rather than battery charging and discharging.
 
 ---
 
@@ -103,11 +108,56 @@ flowchart LR
     D --> E[Output]
 ```
 
-1. **Input** — _what data goes in and in what format_
-2. **Preprocessing** — _cleaning, feature extraction, encoding_
-3. **Quantum core** — _the circuit, ansatz, or algorithm used_
-4. **Post-processing** — _decoding, measurement, scoring_
-5. **Output** — _what the user finally gets_
+1. **Input** — The current prototype uses a synthetic dataset with four time slots.
+Feature	Format	Example
+Time slot	String	12:00
+Base electricity demand	kWh	2.5
+Solar generation	kWh	3.0
+Electricity price	₹/kWh	4.0
+Flexible-load decision	Binary: 0 or 1	1
+
+For a real deployment, these inputs could come from smart meters, solar generation forecasts, and applicable electricity tariffs.
+2. **Preprocessing** — • Organize the energy data into time slots.
+• Represent each scheduling decision with a binary variable \(x_i\).
+• Interpret \(x_i=1\) as scheduling one 1-kWh flexible-load block in slot \(i\), and \(x_i=0\) as not scheduling it.
+• Calculate estimated grid imports using demand minus available solar generation, with a lower bound of zero.
+
+3. **Quantum core** — The prototype uses a small, one-layer QAOA circuit simulated through Qiskit Aer.
+
+The objective function is:
+\[
+C(x)=
+\sum_{i=1}^{n}p_i
+\max(d_i+x_i-s_i,0)
++\lambda\left(\sum_{i=1}^{n}x_i-K\right)^2
+\]
+
+Where:
+- \(p_i\): electricity price in slot \(i\).
+- \(d_i\): base demand.
+- \(s_i\): solar generation.
+- \(x_i\): binary flexible-load decision.
+- \(K\): required number of scheduled load blocks.
+- \(\lambda\): constraint penalty.
+The circuit applies a cost-based phase separator followed by mixer rotations. A classical optimizer adjusts the QAOA parameters to seek lower expected cost.
+
+4. **Post-processing** — Measurement and scoring
+- Measure the quantum circuit to obtain bitstrings.
+- Decode each bitstring into a candidate schedule.
+- Calculate its estimated electricity cost and constraint feasibility.
+- Identify the best feasible candidate observed.
+- Compare it with the exact classical optimum.
+- 
+Because QAOA is stochastic, it may not find the optimal schedule in every run.
+
+5. **Output** — The Streamlit interface displays:
+- Estimated grid electricity cost.
+- Selected time slots for flexible loads.
+- Schedule feasibility.
+- QAOA measurement counts and feasible samples.
+- Comparison against the exact classical result.
+- 
+The next development stage is to add battery state-of-charge constraints, real energy data, and a validated emissions model.
 
 ---
 
