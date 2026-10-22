@@ -142,9 +142,11 @@ flowchart LR
 
  The objective function is:
 
-```math
+$$
 C(x) = \sum_{i=1}^{n} p_i \max(d_i + x_i - s_i, 0)
-+ \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2```
++ \lambda \left(\sum_{i=1}^{n} x_i - K\right)^2
+$$
+
 
  Where:
 - $$\(p_i\)$$: electricity price in slot i.
